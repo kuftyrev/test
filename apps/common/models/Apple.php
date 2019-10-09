@@ -31,8 +31,12 @@ class Apple extends ActiveRecord
      * @param string $color
      * @throws \Exception
      */
-    public function __construct($color = 'green')
+    public function __construct($color = null, $config = [])
     {
+        if (!$color) {
+            $color = $this->getRandomColor();
+        }
+
         $config = [
             'color' => $color,
             'created_at' => $this->randomDateInRange((new \DateTime())->modify('-1 year'), (new \DateTime()))->format('Y-m-d H:i:s'),
@@ -79,6 +83,22 @@ class Apple extends ActiveRecord
             'status' => 'Status',
             'percent_eat' => 'Percent Eat',
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getRandomColor(): string
+    {
+        $colors = [
+            'green',
+            'yellow',
+            'red',
+        ];
+
+        $rnd = mt_rand(0, count($colors) - 1);
+
+        return $colors[$rnd];
     }
 
     /**

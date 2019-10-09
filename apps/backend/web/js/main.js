@@ -88,18 +88,18 @@ const initApplesPage = function () {
 
     function renderAppleCard(apple) {
         let buttons = `
-            <button class="fall" data-id="${apple.id}">Упасть</button>
+            <button class="btn btn-info fall" data-id="${apple.id}">Упасть</button>
             <div class="eat-block" style="display: none;">
-                <button class="eat" data-id="${apple.id}">Съесть</button>
-                <input class="percent-val" name="percent" type="text" value="25" data-id="${apple.id}">
+                <button class="btn btn-info eat" data-id="${apple.id}">Съесть</button>
+                <input class="form-control percent-val" name="percent" type="text" value="25" data-id="${apple.id}">
                 <label for="percent">%</label>
             </div>`;
         let card = $(`
             <div class="apple-card">
                 <div class="info">
-                    <div class="color">${apple.color}</div>
-                    <div class="status">${SETTINGS['statuses'][apple.status]}</div>
-                    <div class="percent-eat">${apple.percent_eat / 100}</div>
+                    <div class="color">Цвет: ${apple.color}</div>
+                    <div class="status">Статус: ${SETTINGS['statuses'][apple.status]}</div>
+                    <div class="percent-eat">Размер: ${apple.percent_eat / 100}</div>
                 </div>
                 <div class="buttons">${buttons}</div>
             </div>`);
@@ -107,12 +107,4 @@ const initApplesPage = function () {
         appleCards.append(card);
     }
 
-    function getStatusString(status) {
-        switch (status) {
-            case 0:
-                return "На дереве";
-            case 1:
-                return ""
-        }
-    }
 }

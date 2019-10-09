@@ -34,7 +34,14 @@ const initApplesPage = function () {
         $.ajax('index.php?r=apples%2Fcreate', {
             type: 'POST',
             success: function (data) {
-
+                if (data.success) {
+                    debugger;
+                    data.apples.forEach(function (apple) {
+                        renderAppleCard(apple);
+                    });
+                } else {
+                    alert(data.reason);
+                }
             },
             error: function (e) {
                 console.log(e);

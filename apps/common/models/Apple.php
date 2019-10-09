@@ -1,9 +1,9 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
-
+use \yii\db\ActiveRecord;
 /**
  * This is the model class for table "apples".
  *
@@ -14,7 +14,7 @@ use Yii;
  * @property int $status
  * @property int $percent_eat
  */
-class Apple extends \yii\db\ActiveRecord
+class Apple extends ActiveRecord
 {
     /**
      * {@inheritdoc}

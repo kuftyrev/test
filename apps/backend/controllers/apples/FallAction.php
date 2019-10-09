@@ -34,7 +34,7 @@ class FallAction extends Action
 
             $apple->status = Apple::STATUS_FALL;
 
-            return ['success' => $apple->save()];
+            return ['success' => $apple->save(), 'status' => $apple->status];
         } catch (\Exception $e) {
             return ['success' => false, 'reason' => $e->getMessage()];
         }

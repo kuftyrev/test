@@ -1,4 +1,19 @@
+let SETTINGS;
+function getSettings() {
+    $.ajax('index.php?r=apples%2Fsettings', {
+        type: 'POST',
+        success: function (data) {
+            SETTINGS = data;
+        },
+        error: function () {
+            SETTINGS = [];
+        }
+    });
+}
+getSettings();
+
 const initApplesPage = function () {
+
     let appleCards = $('.apple-cards');
 
     appleCards.on('click', '.fall', function () {
@@ -11,7 +26,7 @@ const initApplesPage = function () {
                 if (data.success) {
                     $(self).hide();
                     $(self).parent().find('.eat-block').show();
-                    $(self).parent().parent().find('.status').text(1);
+                    $(self).parent().parent().find('.status').text(SETTINGS['statuses'][data.status]);
                 } else {
                     alert(data.reason);
                 }
@@ -37,7 +52,7 @@ const initApplesPage = function () {
                     if (data.size <= 0) {
                         block.remove();
                     } else {
-                        block.find('.percent-eat').text(data.size);
+                        block.find('.percent-eat').text('Размер: ' + data.size);
                     }
                 } else {
                     alert(data.reason);
@@ -58,7 +73,6 @@ const initApplesPage = function () {
             type: 'POST',
             success: function (data) {
                 if (data.success) {
-                    debugger;
                     data.apples.forEach(function (apple) {
                         renderAppleCard(apple);
                     });
@@ -84,12 +98,21 @@ const initApplesPage = function () {
             <div class="apple-card">
                 <div class="info">
                     <div class="color">${apple.color}</div>
-                    <div class="status">${apple.status}</div>
+                    <div class="status">${SETTINGS['statuses'][apple.status]}</div>
                     <div class="percent-eat">${apple.percent_eat / 100}</div>
                 </div>
                 <div class="buttons">${buttons}</div>
             </div>`);
-        
+
         appleCards.append(card);
+    }
+
+    function getStatusString(status) {
+        switch (status) {
+            case 0:
+                return "На дереве";
+            case 1:
+                return ""
+        }
     }
 }

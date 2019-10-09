@@ -155,4 +155,22 @@ class Apple extends ActiveRecord
 
         return $randomDate;
     }
+
+    /**
+     * @return string
+     */
+    public function getStatusString(): string
+    {
+        return self::getSettings()['statuses'][$this->status];
+    }
+
+    public static function getSettings(): array
+    {
+        return [
+            'statuses' => [
+                self::STATUS_AT_TREE => 'На дереве',
+                self::STATUS_FALL    => 'Упало',
+            ]
+        ];
+    }
 }

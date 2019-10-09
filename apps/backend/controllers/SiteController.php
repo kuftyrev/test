@@ -6,6 +6,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use common\models\Apple;
 
 /**
  * Site controller
@@ -60,7 +61,9 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $apples = Apple::find()->all();
+        
+        return $this->render('index', ['apples' => $apples]);
     }
 
     /**

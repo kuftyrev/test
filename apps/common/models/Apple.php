@@ -13,9 +13,38 @@ use \yii\db\ActiveRecord;
  * @property string $fall_at
  * @property int $status
  * @property int $percent_eat
+ * @property float $size
  */
 class Apple extends ActiveRecord
 {
+    public const STATUS_AT_TREE = 0;
+    public const STATUS_FALL    = 1;
+    public const STATUS_ROTTEN  = 2;
+
+    /**
+     * @var $size float
+     */
+    private $size;
+
+    /**
+     * Apple constructor.
+     * @param string $color
+     * @throws \Exception
+     */
+    public function __construct($color = 'green')
+    {
+        $config = [
+            'color' => $color,
+            'created_at' => $this->randomDateInRange((new \DateTime())->modify('-1 year'), (new \DateTime()))->format('Y-m-d H:i:s'),
+            'percent_eat' => 100,
+            'status' => self::STATUS_AT_TREE,
+        ];
+
+
+        parent::__construct($config);
+
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -50,5 +79,80 @@ class Apple extends ActiveRecord
             'status' => 'Status',
             'percent_eat' => 'Percent Eat',
         ];
+    }
+
+    /**
+     * @param int $percent
+     * @return bool
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function eat(int $percent): bool
+    {
+        if ($this->status !== self::STATUS_FALL) {
+            throw new \Exception('Apple at tree');
+        }
+
+        $fallAt = new \DateTime($this->fall_at);
+        $hoursOfFall = $fallAt->diff(new \DateTime())->h;
+
+        if ($hoursOfFall > 5) {
+            throw new \Exception('Apple is rotten');
+        }
+
+        $this->percent_eat = $this->percent_eat - $percent;
+
+        if ($this->percent_eat <= 0) {
+            return $this->delete();
+        }
+
+        return $this->save();
+    }
+
+    /**
+     * @return bool
+     * @throws \Exception
+     */
+    public function fallToGround(): bool
+    {
+        $this->status = self::STATUS_FALL;
+
+        $this->fall_at = (new \DateTime())->format('Y-m-d H:i:s');
+
+        return $this->save();
+    }
+
+    /**
+     * @param float $size
+     * @return Apple
+     */
+    public function setSize(float $size): self
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    /**
+     * @return float|int
+     */
+    public function getSize()
+    {
+        return $this->percent_eat / 100;
+    }
+
+    /**
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @return \DateTime
+     * @throws \Exception
+     */
+    private function randomDateInRange(\DateTime $start, \DateTime $end): \DateTime {
+        $randomTimestamp = mt_rand($start->getTimestamp(), $end->getTimestamp());
+
+        $randomDate = new \DateTime();
+        $randomDate->setTimestamp($randomTimestamp);
+
+        return $randomDate;
     }
 }

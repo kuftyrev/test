@@ -6,9 +6,9 @@ use common\models\Apple;
 /* @var $apples \common\models\Apple[] */
 
 $this->title = 'My Yii Application';
+$this->registerJs('initApplesPage()', \yii\web\View::POS_READY);
 ?>
 <div class="site-index">
-
     <div class="apple-cards">
         <?php
         foreach ($apples as $apple) {
